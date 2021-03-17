@@ -1,0 +1,55 @@
+Sub Cleaning()
+'
+' Cleaning Macro
+'
+
+'
+
+Application.ScreenUpdating = False
+For Each sh In Worksheets
+If sh.Name <> "Sheet2" Then
+    sh.Activate
+
+    Columns("A:A").Select
+    Selection.Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromLeftOrAbove
+    Range("A1").Select
+    ActiveCell.FormulaR1C1 = "Week"
+    Range("A2").Select
+    ActiveCell.FormulaR1C1 = "=WEEKNUM(RC[1],2)"
+    
+    Range("A2").AutoFill Destination:=Range("A2:A" & Range("B" & Rows.Count).End(xlUp).Row)
+    Range("A2:A94").Select
+    
+    Range("AC1").Select
+    ActiveCell.FormulaR1C1 = "Duration"
+    Range("AC2").Select
+    ActiveCell.FormulaR1C1 = "=IF(RC[-22]-RC[-23]<0,"""",RC[-22]-RC[-23])"
+    Range("AD1").Select
+    ActiveCell.FormulaR1C1 = "Duration in hours"
+    Range("AD2").Select
+    ActiveCell.FormulaR1C1 = "=HOUR(RC[-1])+MINUTE(RC[-1])/60"
+    Range("AE1").Select
+    ActiveCell.FormulaR1C1 = "No. of operators"
+    Range("AE2").Select
+    ActiveCell.FormulaR1C1 = "=ROUNDDOWN(COUNTA(RC[-23]:RC[-10])/2,0)"
+    Range("AF1").Select
+    ActiveCell.FormulaR1C1 = "Pcs/Manhr"
+    Range("AF2").Select
+    ActiveCell.FormulaR1C1 = _
+        "=IFERROR(IF(RC[-4]/RC[-2]/RC[-1]<0,"""",RC[-4]/RC[-2]/RC[-1]),"""")"
+    Range("AG1").Select
+    ActiveCell.FormulaR1C1 = "Average/week"
+    Range("AG2").Select
+    ActiveCell.FormulaR1C1 = "=AVERAGEIF(R2C1:R800C1,RC[-32],R2C32:R800C32)"
+    
+    Range("AC2:AG2").AutoFill Destination:=Range("AC2:AG2" & Range("AB" & Rows.Count).End(xlUp).Row)
+    
+End If
+Next sh
+Application.ScreenUpdating = True
+    
+
+
+
+    
+End Sub

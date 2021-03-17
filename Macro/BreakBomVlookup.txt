@@ -1,0 +1,387 @@
+Sub BreakBomAndVlookup()
+'
+' BreakBomAndVlookup Macro
+'
+'
+    Application.ScreenUpdating = False
+    'insert the two excel files
+    Dim FGSKU As String
+    Dim SOH As String
+    
+    
+    With Application.FileDialog(msoFileDialogFilePicker)
+    .AllowMultiSelect = False
+    .Title = "Select SOH"
+    .ButtonName = "Confirm"
+    If .Show = -1 Then
+    SOH = .SelectedItems(1)
+    End If
+    End With
+    
+     'Find the last instance in the string of the path separator "\"
+    lNewBracketLocation = InStrRev(SOH, Application.PathSeparator)
+    'Edit the string to suit the VLOOKUP formula - insert "["
+    SOH = Left$(SOH, lNewBracketLocation) & "[" & Right$(SOH, Len(SOH) - lNewBracketLocation)
+    
+    With Application.FileDialog(msoFileDialogFilePicker)
+    .AllowMultiSelect = False
+    .Title = "Select BOM Master"
+    .ButtonName = "Confirm"
+    If .Show = -1 Then
+    FGSKU = .SelectedItems(1)
+    End If
+    End With
+    
+    'Find the last instance in the string of the path separator "\"
+    NewBracketLocation = InStrRev(FGSKU, Application.PathSeparator)
+    'Edit the string to suit the VLOOKUP formula - insert "["
+    FGSKU = Left$(FGSKU, NewBracketLocation) & "[" & Right$(FGSKU, Len(FGSKU) - NewBracketLocation)
+    
+    
+    Dim fileName As String
+    With Application.FileDialog(msoFileDialogFilePicker)
+    .AllowMultiSelect = False
+    .Title = "Select Order"
+    .ButtonName = "Confirm"
+    If .Show = -1 Then
+    fileName = .SelectedItems(1)
+    End If
+    End With
+    
+
+
+    'Opens the source workbook
+    Application.Workbooks.Open (fileName)
+
+    'Activates the source workbook, so hopefully the macro works on it instead on the master template file.
+    
+    
+    Dim wsNew1 As Worksheet
+
+    Set wsNew1 = Sheets.Add
+    
+        
+        wsNew1.Name = "Working Sheet"
+    
+
+
+    Set wsCore = Sheets("ExportWorksheet")
+
+    
+    With wsCore
+
+    .Columns("A").Copy Destination:=wsNew1.Columns("A")
+    .Columns("AD").Copy Destination:=wsNew1.Columns("B")
+    .Columns("AF").Copy Destination:=wsNew1.Columns("C")
+    .Columns("AG").Copy Destination:=wsNew1.Columns("D")
+
+    End With
+    
+
+    
+    Range("E1").Select
+    Application.CutCopyMode = False
+    With Selection.Interior
+        .Pattern = xlSolid
+        .PatternColorIndex = xlAutomatic
+        .Color = 12566463
+        .TintAndShade = 0
+        .PatternTintAndShade = 0
+    End With
+    Selection.Borders(xlDiagonalDown).LineStyle = xlNone
+    Selection.Borders(xlDiagonalUp).LineStyle = xlNone
+    Selection.Borders(xlEdgeLeft).LineStyle = xlNone
+    Selection.Borders(xlEdgeTop).LineStyle = xlNone
+    Selection.Borders(xlEdgeBottom).LineStyle = xlNone
+    Selection.Borders(xlEdgeRight).LineStyle = xlNone
+    Selection.Borders(xlInsideVertical).LineStyle = xlNone
+    Selection.Borders(xlInsideHorizontal).LineStyle = xlNone
+    With Selection
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+        .WrapText = False
+        .Orientation = 0
+        .AddIndent = False
+        .ShrinkToFit = False
+        .ReadingOrder = xlContext
+        .MergeCells = False
+    End With
+    Selection.NumberFormat = "General"
+    ActiveCell.FormulaR1C1 = "Available"
+    Range("E2").Select
+    ActiveCell.FormulaR1C1 = _
+        "=VLOOKUP(RC[-3],'" & SOH & "]Sheet'!C2:C8,7,FALSE)"
+    
+
+        
+    Range("F1").Select
+    With Selection.Interior
+        .Pattern = xlSolid
+        .PatternColorIndex = xlAutomatic
+        .Color = 12566463
+        .TintAndShade = 0
+        .PatternTintAndShade = 0
+    End With
+    Selection.Borders(xlDiagonalDown).LineStyle = xlNone
+    Selection.Borders(xlDiagonalUp).LineStyle = xlNone
+    Selection.Borders(xlEdgeLeft).LineStyle = xlNone
+    Selection.Borders(xlEdgeTop).LineStyle = xlNone
+    Selection.Borders(xlEdgeBottom).LineStyle = xlNone
+    Selection.Borders(xlEdgeRight).LineStyle = xlNone
+    Selection.Borders(xlInsideVertical).LineStyle = xlNone
+    Selection.Borders(xlInsideHorizontal).LineStyle = xlNone
+    With Selection
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+        .WrapText = False
+        .Orientation = 0
+        .AddIndent = False
+        .ShrinkToFit = False
+        .ReadingOrder = xlContext
+        .MergeCells = False
+    End With
+    Selection.NumberFormat = "General"
+    ActiveCell.FormulaR1C1 = "Components"
+    Range("F2").Select
+    ActiveCell.FormulaArray = _
+        "=COUNT(IF('" & FGSKU & "]Sheet1'!R2C1:R500C1=RC[-4],1))"
+    Range("G1").Select
+    ActiveCell.FormulaR1C1 = "2"
+    Range("H1").Select
+    ActiveCell.FormulaR1C1 = "3"
+    Range("I1").Select
+    ActiveCell.FormulaR1C1 = "4"
+    Range("J1").Select
+    ActiveCell.FormulaR1C1 = "5"
+    Range("K1").Select
+    ActiveCell.FormulaR1C1 = "6"
+    Range("L1").Select
+    ActiveCell.FormulaR1C1 = "7"
+    Range("M1").Select
+    ActiveCell.FormulaR1C1 = "8"
+    Range("N1").Select
+    ActiveCell.FormulaR1C1 = "9"
+    Range("O1").Select
+    ActiveCell.FormulaR1C1 = "10"
+
+ 
+    Range("G2").Select
+    ActiveCell.FormulaR1C1 = _
+        "=IF(RC6=0,"""",IFNA(VLOOKUP(RC2,'" & FGSKU & "]FG SKU BOM'!R1C1:R300C11,R1C7,FALSE),""""))"
+    Range("H2").Select
+    ActiveCell.FormulaR1C1 = _
+        "=IF(RC6=0,"""",IFNA(VLOOKUP(RC2,'" & FGSKU & "]FG SKU BOM'!R1C1:R300C11,R1C8,FALSE),""""))"
+    Range("I2").Select
+    ActiveCell.FormulaR1C1 = _
+        "=IF(RC6=0,"""",IFNA(VLOOKUP(RC2,'" & FGSKU & "]FG SKU BOM'!R1C1:R300C11,R1C9,FALSE),""""))"
+    
+    Range("J2").Select
+    ActiveCell.FormulaR1C1 = _
+        "=IF(RC6=0,"""",IFNA(VLOOKUP(RC2,'" & FGSKU & "]FG SKU BOM'!R1C1:R300C11,R1C10,FALSE),""""))"
+    
+    Range("K2").Select
+    ActiveCell.FormulaR1C1 = _
+        "=IF(RC6=0,"""",IFNA(VLOOKUP(RC2,'" & FGSKU & "]FG SKU BOM'!R1C1:R300C11,R1C11,FALSE),""""))"
+    
+    Range("L2").Select
+    ActiveCell.FormulaR1C1 = _
+        "=IF(RC6=0,"""",IFNA(VLOOKUP(RC2,'" & FGSKU & "]FG SKU BOM'!R1C1:R300C11,R1C12,FALSE),""""))"
+    
+    Range("M2").Select
+    ActiveCell.FormulaR1C1 = _
+        "=IF(RC6=0,"""",IFNA(VLOOKUP(RC2,'" & FGSKU & "]FG SKU BOM'!R1C1:R300C11,R1C13,FALSE),""""))"
+    Range("N2").Select
+    ActiveCell.FormulaR1C1 = _
+        "=IF(RC6=0,"""",IFNA(VLOOKUP(RC2,'" & FGSKU & "]FG SKU BOM'!R1C1:R300C11,R1C14,FALSE),""""))"
+    Range("O2").Select
+    ActiveCell.FormulaR1C1 = _
+        "=IF(RC6=0,"""",IFNA(VLOOKUP(RC2,'" & FGSKU & "]FG SKU BOM'!R1C1:R300C11,R1C15,FALSE),""""))"
+    
+    
+    Dim endRow1 As Long
+    endRow1 = Cells(Rows.count, "A").End(xlUp).Row
+   
+    Range("E2:O2").Select
+    Selection.AutoFill Destination:=Range("E2:O" & endRow1)
+    
+    Worksheets("Working Sheet").Activate
+    Dim r, count As Range, count1 As Range
+    Dim LastRow As Long
+    Dim temp As Integer
+    
+    Dim n As Integer
+    Set r = Range("A:O")
+    Set count = Range("F:F")
+    Set count1 = Range("E:E")
+    LastRow = Range("F" & Rows.count).End(xlUp).Row
+    
+    For n = LastRow To 2 Step -1
+        
+        If IsError(Range("E" & n)) Then
+                temp = Range("F" & n)
+                If (temp >= 1) Then
+                    Rows(n + 1 & ":" & n + temp).Insert Shift:=xlDown
+            
+                End If
+        End If
+    Next n
+    
+    
+    Dim endRow As Long
+    endRow = Cells(Rows.count, "A").End(xlUp).Row
+    
+    'insert order number
+    Dim cnter3 As Integer
+    For Z = 2 To endRow
+        If IsEmpty(Cells(Z, 1)) Then
+            cnter3 = 0
+            For w = Z To Z + 9
+                
+                Select Case cnter3
+                    Case 0: If IsEmpty(Cells(w, 1)) Then Cells(w, 1).Value = "=R[-1]" Else Exit For
+                    Case 1: If IsEmpty(Cells(w, 1)) Then Cells(w, 1).Value = "=R[-2]" Else Exit For
+                    Case 2: If IsEmpty(Cells(w, 1)) Then Cells(w, 1).Value = "=R[-3]" Else Exit For
+                    Case 3: If IsEmpty(Cells(w, 1)) Then Cells(w, 1).Value = "=R[-4]" Else Exit For
+                    Case 4: If IsEmpty(Cells(w, 1)) Then Cells(w, 1).Value = "=R[-5]" Else Exit For
+                    Case 5: If IsEmpty(Cells(w, 1)) Then Cells(w, 1).Value = "=R[-6]" Else Exit For
+                    Case 6: If IsEmpty(Cells(w, 1)) Then Cells(w, 1).Value = "=R[-7]" Else Exit For
+                    Case 7: If IsEmpty(Cells(w, 1)) Then Cells(w, 1).Value = "=R[-8]" Else Exit For
+                    Case 8: If IsEmpty(Cells(w, 1)) Then Cells(w, 1).Value = "=R[-9]" Else Exit For
+                    Case 9: If IsEmpty(Cells(w, 1)) Then Cells(w, 1).Value = "=R[-10]" Else Exit For
+                    
+                    
+                    
+                    
+
+                End Select
+            cnter3 = cnter3 + 1
+            Next
+            
+        End If
+    Next
+    
+    
+    
+
+     
+     'insert component sku
+    
+    Dim cnter As Integer
+    For i = 2 To endRow
+        If IsEmpty(Cells(i, 2)) Then
+            cnter = 0
+            For j = i To i + 9
+                
+                Select Case cnter
+                    Case 0: If IsEmpty(Cells(j, 2)) Then Cells(j, 2).Value = "=VLOOKUP(R[-1]C,'" & FGSKU & "]FG SKU BOM'!R1C1:R500C11,2,FALSE)" Else Exit For
+                    Case 1: If IsEmpty(Cells(j, 2)) Then Cells(j, 2).Value = "=VLOOKUP(R[-2]C,'" & FGSKU & "]FG SKU BOM'!R1C1:R500C11,3,FALSE)" Else Exit For
+                    Case 2: If IsEmpty(Cells(j, 2)) Then Cells(j, 2).Value = "=VLOOKUP(R[-3]C,'" & FGSKU & "]FG SKU BOM'!R1C1:R500C11,4,FALSE)" Else Exit For
+                    Case 3: If IsEmpty(Cells(j, 2)) Then Cells(j, 2).Value = "=VLOOKUP(R[-4]C,'" & FGSKU & "]FG SKU BOM'!R1C1:R500C11,5,FALSE)" Else Exit For
+                    Case 4: If IsEmpty(Cells(j, 2)) Then Cells(j, 2).Value = "=VLOOKUP(R[-5]C,'" & FGSKU & "]FG SKU BOM'!R1C1:R500C11,6,FALSE)" Else Exit For
+                    Case 5: If IsEmpty(Cells(j, 2)) Then Cells(j, 2).Value = "=VLOOKUP(R[-6]C,'" & FGSKU & "]FG SKU BOM'!R1C1:R500C11,7,FALSE)" Else Exit For
+                    Case 6: If IsEmpty(Cells(j, 2)) Then Cells(j, 2).Value = "=VLOOKUP(R[-7]C,'" & FGSKU & "]FG SKU BOM'!R1C1:R500C11,8,FALSE)" Else Exit For
+                    Case 7: If IsEmpty(Cells(j, 2)) Then Cells(j, 2).Value = "=VLOOKUP(R[-8]C,'" & FGSKU & "]FG SKU BOM'!R1C1:R500C11,9,FALSE)" Else Exit For
+                    Case 8: If IsEmpty(Cells(j, 2)) Then Cells(j, 2).Value = "=VLOOKUP(R[-9]C,'" & FGSKU & "]FG SKU BOM'!R1C1:R500C11,10,FALSE)" Else Exit For
+                    Case 9: If IsEmpty(Cells(j, 2)) Then Cells(j, 2).Value = "=VLOOKUP(R[-10]C,'" & FGSKU & "]FG SKU BOM'!R1C1:R500C11,11,FALSE)" Else Exit For
+                    
+                    
+                    
+                    
+
+                End Select
+            cnter = cnter + 1
+            Next
+            
+        End If
+    Next
+    
+    'insert description
+    Dim cnter1 As Integer
+    For k = 2 To endRow
+        If IsEmpty(Cells(k, 3)) Then
+            cnter1 = 0
+            For l = k To k + 9
+                
+                Select Case cnter1
+                    Case 0: If IsEmpty(Cells(l, 3)) Then Cells(l, 3).Value = "=VLOOKUP(RC[-1],'" & FGSKU & "]Sheet1'!R1C2:R500C11,2,FALSE)" Else Exit For
+                    Case 1: If IsEmpty(Cells(l, 3)) Then Cells(l, 3).Value = "=VLOOKUP(RC[-1],'" & FGSKU & "]Sheet1'!R1C2:R500C11,2,FALSE)" Else Exit For
+                    Case 2: If IsEmpty(Cells(l, 3)) Then Cells(l, 3).Value = "=VLOOKUP(RC[-1],'" & FGSKU & "]Sheet1'!R1C2:R500C11,2,FALSE)" Else Exit For
+                    Case 3: If IsEmpty(Cells(l, 3)) Then Cells(l, 3).Value = "=VLOOKUP(RC[-1],'" & FGSKU & "]Sheet1'!R1C2:R500C11,2,FALSE)" Else Exit For
+                    Case 4: If IsEmpty(Cells(l, 3)) Then Cells(l, 3).Value = "=VLOOKUP(RC[-1],'" & FGSKU & "]Sheet1'!R1C2:R500C11,2,FALSE)" Else Exit For
+                    Case 5: If IsEmpty(Cells(l, 3)) Then Cells(l, 3).Value = "=VLOOKUP(RC[-1],'" & FGSKU & "]Sheet1'!R1C2:R500C11,2,FALSE)" Else Exit For
+                    Case 6: If IsEmpty(Cells(l, 3)) Then Cells(l, 3).Value = "=VLOOKUP(RC[-1],'" & FGSKU & "]Sheet1'!R1C2:R500C11,2,FALSE)" Else Exit For
+                    Case 7: If IsEmpty(Cells(l, 3)) Then Cells(l, 3).Value = "=VLOOKUP(RC[-1],'" & FGSKU & "]Sheet1'!R1C2:R500C11,2,FALSE)" Else Exit For
+                    Case 8: If IsEmpty(Cells(l, 3)) Then Cells(l, 3).Value = "=VLOOKUP(RC[-1],'" & FGSKU & "]Sheet1'!R1C2:R500C11,2,FALSE)" Else Exit For
+                    Case 9: If IsEmpty(Cells(l, 3)) Then Cells(l, 3).Value = "=VLOOKUP(RC[-1],'" & FGSKU & "]Sheet1'!R1C2:R500C11,2,FALSE)" Else Exit For
+                    
+                    
+                    
+                    
+
+                End Select
+            cnter1 = cnter1 + 1
+            Next
+            
+        End If
+    Next
+    
+    'insert component qty
+    Dim cnter2 As Integer
+    For m = 2 To endRow
+        If IsEmpty(Cells(m, 4)) Then
+            cnter2 = 0
+            For v = m To m + 9
+                
+                Select Case cnter2
+                    Case 0: If IsEmpty(Cells(v, 4)) Then Cells(v, 4).Value = "=VLOOKUP(R[-1]C[-2],'" & FGSKU & "]FG SKU BOM QTY'!R1C1:R500C11,2,FALSE)" Else Exit For
+                    Case 1: If IsEmpty(Cells(v, 4)) Then Cells(v, 4).Value = "=VLOOKUP(R[-2]C[-2],'" & FGSKU & "]FG SKU BOM QTY'!R1C1:R500C11,3,FALSE)" Else Exit For
+                    Case 2: If IsEmpty(Cells(v, 4)) Then Cells(v, 4).Value = "=VLOOKUP(R[-3]C[-2],'" & FGSKU & "]FG SKU BOM QTY'!R1C1:R500C11,4,FALSE)" Else Exit For
+                    Case 3: If IsEmpty(Cells(v, 4)) Then Cells(v, 4).Value = "=VLOOKUP(R[-4]C[-2],'" & FGSKU & "]FG SKU BOM QTY'!R1C1:R500C11,5,FALSE)" Else Exit For
+                    Case 4: If IsEmpty(Cells(v, 4)) Then Cells(v, 4).Value = "=VLOOKUP(R[-5]C[-2],'" & FGSKU & "]FG SKU BOM QTY'!R1C1:R500C11,6,FALSE)" Else Exit For
+                    Case 5: If IsEmpty(Cells(v, 4)) Then Cells(v, 4).Value = "=VLOOKUP(R[-6]C[-2],'" & FGSKU & "]FG SKU BOM QTY'!R1C1:R500C11,7,FALSE)" Else Exit For
+                    Case 6: If IsEmpty(Cells(v, 4)) Then Cells(v, 4).Value = "=VLOOKUP(R[-7]C[-2],'" & FGSKU & "]FG SKU BOM QTY'!R1C1:R500C11,8,FALSE)" Else Exit For
+                    Case 7: If IsEmpty(Cells(v, 4)) Then Cells(v, 4).Value = "=VLOOKUP(R[-8]C[-2],'" & FGSKU & "]FG SKU BOM QTY'!R1C1:R500C11,9,FALSE)" Else Exit For
+                    Case 8: If IsEmpty(Cells(v, 4)) Then Cells(v, 4).Value = "=VLOOKUP(R[-9]C[-2],'" & FGSKU & "]FG SKU BOM QTY'!R1C1:R500C11,10,FALSE)" Else Exit For
+                    Case 9: If IsEmpty(Cells(v, 4)) Then Cells(v, 4).Value = "=VLOOKUP(R[-10]C[-2],'" & FGSKU & "]FG SKU BOM QTY'!R1C1:R500C11,11,FALSE)" Else Exit For
+                    
+                    
+                    
+                    
+
+                End Select
+            cnter2 = cnter2 + 1
+            Next
+            
+        End If
+    Next
+    
+    Range("E2").Select
+    ActiveCell.FormulaR1C1 = _
+        "=VLOOKUP(RC[-3],'" & SOH & "]Sheet'!C2:C8,7,FALSE)"
+        
+    Range("E2").Select
+    Selection.AutoFill Destination:=Range("E2:E" & endRow)
+    
+       Columns("C:C").ColumnWidth = 48.29
+    Cells.Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Application.CutCopyMode = False
+    
+    Selection.AutoFilter
+    ActiveSheet.Range("$A$1:$O$68").AutoFilter Field:=5, Criteria1:="#N/A"
+    ActiveSheet.Range("$A$1:$O$68").AutoFilter Field:=2, Criteria1:=Array( _
+        "LSGG194IMR30E", "LSGG194IMW10E", "LSGG194IMW20E", "LSGV186EC020E", "LSGV187ECR04E" _
+        , "LSGV194IMR20E"), Operator:=xlFilterValues
+    ActiveSheet.AutoFilter.Range.Offset(1, 0).Rows.SpecialCells(xlCellTypeVisible).Delete (xlShiftUp)
+    Selection.AutoFilter
+    
+    Columns("F:O").Select
+    Selection.ClearContents
+    
+    
+    
+    
+'
+End Sub

@@ -1,0 +1,171 @@
+Sub CreatesheetForEachProductType()
+'
+' CreatesheetForEachProductType Macro
+'
+
+'
+ Dim wsNew1 As Worksheet
+
+    Set wsNew1 = Sheets.Add
+    
+        
+        wsNew1.Name = "2nd Inspection Bottle"
+        
+        
+Sheets("Sheet2").Select
+
+ActiveSheet.Range("$A$1:$AF$689").AutoFilter Field:=4, Criteria1:= _
+"2nd Inspection (Bottle)"
+
+Range("A1").Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Range(Selection, Selection.End(xlToRight)).Select
+
+Selection.Copy
+Sheets("2nd Inspection Bottle").Select
+ActiveSheet.Paste
+
+ Dim wsNew2 As Worksheet
+
+    Set wsNew2 = Sheets.Add
+    
+        
+        wsNew2.Name = "2nd Inspection Soap"
+        
+        
+Sheets("Sheet2").Select
+ActiveSheet.Range("$A$1:$AF$689").AutoFilter Field:=4, Criteria1:= _
+"2nd Inspection (Soap)"
+
+Range("A1").Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Range(Selection, Selection.End(xlToRight)).Select
+Selection.Copy
+Sheets("2nd Inspection Soap").Select
+ActiveSheet.Paste
+
+ Dim wsNew3 As Worksheet
+    Set wsNew3 = Sheets.Add
+        wsNew3.Name = "Cello"
+Sheets("Sheet2").Select
+ActiveSheet.Range("$A$1:$AF$689").AutoFilter Field:=4, Criteria1:= _
+"Cello"
+Range("A1").Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Range(Selection, Selection.End(xlToRight)).Select
+Selection.Copy
+Sheets("Cello").Select
+ActiveSheet.Paste
+
+ Dim wsNew4 As Worksheet
+
+    Set wsNew4 = Sheets.Add
+    
+        
+        wsNew4.Name = "P Bottle"
+        
+        
+Sheets("Sheet2").Select
+ActiveSheet.Range("$A$1:$AF$689").AutoFilter Field:=4, Criteria1:= _
+"P (Bottle)"
+
+Range("A1").Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Range(Selection, Selection.End(xlToRight)).Select
+Selection.Copy
+Sheets("P Bottle").Select
+ActiveSheet.Paste
+
+
+ Dim wsNew5 As Worksheet
+    Set wsNew5 = Sheets.Add
+        wsNew5.Name = "P Others"
+Sheets("Sheet2").Select
+ActiveSheet.Range("$A$1:$AF$689").AutoFilter Field:=4, Criteria1:= _
+"P (Others)"
+Range("A1").Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Range(Selection, Selection.End(xlToRight)).Select
+Selection.Copy
+Sheets("P Others").Select
+ActiveSheet.Paste
+    
+ Dim wsNew6 As Worksheet
+    Set wsNew6 = Sheets.Add
+        wsNew6.Name = "P Refill"
+Sheets("Sheet2").Select
+ActiveSheet.Range("$A$1:$AF$689").AutoFilter Field:=4, Criteria1:= _
+"P (Refill)"
+Range("A1").Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Range(Selection, Selection.End(xlToRight)).Select
+Selection.Copy
+Sheets("P Refill").Select
+ActiveSheet.Paste
+
+Dim wsNew7 As Worksheet
+    Set wsNew7 = Sheets.Add
+        wsNew7.Name = "P Shea Butter"
+Sheets("Sheet2").Select
+ActiveSheet.Range("$A$1:$AF$689").AutoFilter Field:=4, Criteria1:= _
+"P (Shea Butter)"
+Range("A1").Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Range(Selection, Selection.End(xlToRight)).Select
+Selection.Copy
+Sheets("P Shea Butter").Select
+ActiveSheet.Paste
+
+Dim wsNew8 As Worksheet
+    Set wsNew8 = Sheets.Add
+        wsNew8.Name = "P Soap"
+Sheets("Sheet2").Select
+ActiveSheet.Range("$A$1:$AF$689").AutoFilter Field:=4, Criteria1:= _
+"P (Soap)"
+Range("A1").Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Range(Selection, Selection.End(xlToRight)).Select
+Selection.Copy
+Sheets("P Soap").Select
+ActiveSheet.Paste
+
+Dim wsNew9 As Worksheet
+    Set wsNew9 = Sheets.Add
+        wsNew9.Name = "P Tube"
+Sheets("Sheet2").Select
+ActiveSheet.Range("$A$1:$AF$689").AutoFilter Field:=4, Criteria1:= _
+"P (Tube)"
+Range("A1").Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Range(Selection, Selection.End(xlToRight)).Select
+Selection.Copy
+Sheets("P Tube").Select
+ActiveSheet.Paste
+
+Dim wsNew10 As Worksheet
+    Set wsNew10 = Sheets.Add
+        wsNew10.Name = "P+S EDT"
+Sheets("Sheet2").Select
+ActiveSheet.Range("$A$1:$AF$689").AutoFilter Field:=4, Criteria1:= _
+"P+S (EDT)"
+Range("A1").Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Range(Selection, Selection.End(xlToRight)).Select
+Selection.Copy
+Sheets("P+S EDT").Select
+ActiveSheet.Paste
+
+Dim wsNew11 As Worksheet
+    Set wsNew11 = Sheets.Add
+        wsNew11.Name = "P+S non EDT"
+Sheets("Sheet2").Select
+ActiveSheet.Range("$A$1:$AF$689").AutoFilter Field:=4, Criteria1:= _
+"P+S (non EDT)"
+Range("A1").Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Range(Selection, Selection.End(xlToRight)).Select
+Selection.Copy
+Sheets("P+S non EDT").Select
+ActiveSheet.Paste
+    
+End Sub

@@ -1,0 +1,126 @@
+Sub AutoVlookup()
+'
+' AutoVlookup Macro
+'
+
+'
+    Application.ScreenUpdating = False
+    Dim UpdateJPOrder As String
+    Dim JapanMaster As String
+    
+    
+    With Application.FileDialog(msoFileDialogFilePicker)
+    .AllowMultiSelect = False
+    .Title = "Select UpdateJPOrder"
+    .ButtonName = "Confirm"
+    If .Show = -1 Then
+    UpdateJPOrder = .SelectedItems(1)
+    End If
+    End With
+    
+     With Application.FileDialog(msoFileDialogFilePicker)
+    .AllowMultiSelect = False
+    .Title = "Select JapanMaster"
+    .ButtonName = "Confirm"
+    If .Show = -1 Then
+    JapanMaster = .SelectedItems(1)
+    End If
+    End With
+    
+    'Find the last instance in the string of the path separator "\"
+    lNewBracketLocation = InStrRev(UpdateJPOrder, Application.PathSeparator)
+    'Edit the string to suit the VLOOKUP formula - insert "["
+    UpdateJPOrder = Left$(UpdateJPOrder, lNewBracketLocation) & "[" & Right$(UpdateJPOrder, Len(UpdateJPOrder) - lNewBracketLocation)
+    
+    'Find the last instance in the string of the path separator "\"
+    NewBracketLocation = InStrRev(JapanMaster, Application.PathSeparator)
+    'Edit the string to suit the VLOOKUP formula - insert "["
+    JapanMaster = Left$(JapanMaster, NewBracketLocation) & "[" & Right$(JapanMaster, Len(JapanMaster) - NewBracketLocation)
+
+
+    Range("A:M").Select 'specify the range which suits your purpose
+    With Selection
+    Selection.NumberFormat = "General"
+    .Value = .Value
+    End With
+
+    Dim endRow As Long
+    endRow = Cells(Rows.Count, "A").End(xlUp).Row
+    
+    Range("G1").Select
+    ActiveCell.FormulaR1C1 = "Forecast"
+    Range("H1").Select
+    ActiveCell.FormulaR1C1 = "Gap(Actual - Forecast)"
+    Range("H2").Select
+    ActiveCell.FormulaR1C1 = "=RC[-5]-RC[-1]"
+    Range("H2").Select
+    Selection.AutoFill Destination:=Range("H2:H" & endRow)
+    
+    
+    
+    Range("I1").Select
+    ActiveCell.FormulaR1C1 = "Remarks"
+    Range("J1").Select
+    ActiveCell.FormulaR1C1 = "Label Type"
+    Range("K1").Select
+    ActiveCell.FormulaR1C1 = "Product Type"
+    Range("I2").Select
+    ActiveCell.FormulaR1C1 = _
+        "=VLOOKUP(RC1,'" & UpdateJPOrder & "]Summary'!C1:C8,8,FALSE)"
+        
+    Range("J2").Select
+    ActiveCell.FormulaR1C1 = _
+        "=IFNA(VLOOKUP(RC1,'" & UpdateJPOrder & "]Summary'!C1:C8,6,FALSE),VLOOKUP(RC1,'" & JapanMaster & "]Product Master Table (2)'!C4:C42,37,FALSE))"
+    Range("K2").Select
+    ActiveCell.FormulaR1C1 = _
+        "=IFNA(VLOOKUP(RC1,'" & UpdateJPOrder & "]Summary'!C1:C8,7,FALSE),VLOOKUP(RC1,'" & JapanMaster & "]Product Master Table (2)'!C4:C42,39,FALSE))"
+    
+    
+    
+   
+    
+    Range("I2").Select
+    Selection.AutoFill Destination:=Range("I2:I" & endRow)
+    Range("J2").Select
+    Selection.AutoFill Destination:=Range("J2:J" & endRow)
+    Range("K2").Select
+    Selection.AutoFill Destination:=Range("K2:K" & endRow)
+        Range("L6").Select
+    ActiveCell.FormulaR1C1 = "Forecast Qty"
+
+    Range("L7").Select
+    ActiveCell.FormulaR1C1 = "Order Qty"
+    Range("L8").Select
+    ActiveCell.FormulaR1C1 = "POSM sample"
+    Range("L9").Select
+    ActiveCell.FormulaR1C1 = "Cancel Order"
+    Range("L10").Select
+    ActiveCell.FormulaR1C1 = "2nd inspection"
+    Range("L11").Select
+    ActiveCell.FormulaR1C1 = "Effective Order qty"
+    Range("L12").Select
+    ActiveCell.FormulaR1C1 = "Label Unavailable"
+    Range("L13").Select
+    ActiveCell.FormulaR1C1 = "Missing product in product master"
+    Range("L14").Select
+    ActiveCell.FormulaR1C1 = "Total Qty to be label"
+    Range("L15").Select
+    ActiveCell.FormulaR1C1 = "BLX Capacity"
+    Range("M7").Select
+    ActiveCell.FormulaR1C1 = "=SUM(C[-10])"
+    Range("M8").Select
+    ActiveCell.FormulaR1C1 = "=SUMIF(C[-12],""52*"",C[-10])"
+    Range("M9").Select
+    ActiveCell.FormulaR1C1 = "=SUMIF(C[-3],""CANCEL"",C[-10])"
+    Range("M10").Select
+    ActiveCell.FormulaR1C1 = _
+        "=SUMIF(C[-4],""2nd Inspection Only. No Labeling. "",C[-10])"
+    Range("M11").Select
+    ActiveCell.FormulaR1C1 = "=R[-4]C-R[-3]C-R[-2]C-R[-1]C"
+    
+    Range("M13").Select
+    ActiveCell.FormulaR1C1 = "=SUMIF(C[-2],""#N/A"",C[-10])"
+ 
+
+End Sub
+
